@@ -1,0 +1,40 @@
+{
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:security/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "jest",
+    "security",
+    "unicorn",
+    "unused-imports",
+    "simple-import-sort"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "project": ["./tsconfig.paths.json"]
+  },
+  "rules": {
+    "no-console": "error",
+    "jest/expect-expect": "off",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,js}\"",
+    "format:check": "prettier --check --plugin-search-dir=. \"**/*.{ts,js}\""
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}
