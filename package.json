@@ -6,8 +6,8 @@
   "main": "./dist/index.js",
   "bin": "./dist/bin.js",
   "scripts": {
-    "dev": "tsup --format esm --watch --clean --onSuccess \"node dist/bin.js\"",
-    "build": "tsup --format esm --clean --sourcemap --minify --metafile",
+    "dev": "tsup --watch --onSuccess \"node dist/bin.js\"",
+    "build": "tsup",
     "format": "prettier --write --plugin-search-dir=. \"**/*.ts\"",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.ts\"",
     "lint": "eslint **/*.ts",
@@ -45,6 +45,7 @@
     "chalk": "^5.2.0",
     "figlet": "^1.5.2",
     "gradient-string": "^2.0.2",
+    "merge": "^2.1.1",
     "nanospinner": "^1.1.0",
     "prettier": "^2.8.1",
     "prompts": "^2.4.2"
