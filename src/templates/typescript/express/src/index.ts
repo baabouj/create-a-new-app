@@ -3,12 +3,13 @@ import type { Server } from 'http';
 import { config, logger, transport } from '$/config';
 import { ServerInitializationException } from '$/exceptions';
 import { prisma } from '$/lib';
+import { isTest } from '$/utils';
 
 import { app } from './app';
 
 let server: Server;
 
-const exitHandler = async () => {
+const exitHandler = () => {
   if (server) {
     server.close();
   }
@@ -23,12 +24,12 @@ const exitHandler = async () => {
 
 prisma
   .$connect()
-  .then(async () => {
+  .then(() => {
     logger.info('Connected to Database');
 
     transport
       .verify()
-      .then(async () => {
+      .then(() => {
         logger.info('Connected to email server');
 
         server = app.listen(config.port, () =>
@@ -36,6 +37,7 @@ prisma
         );
       })
       .catch(() => {
+        if (isTest()) return;
         throw new ServerInitializationException(
           'Failed to connect to email server'
         );

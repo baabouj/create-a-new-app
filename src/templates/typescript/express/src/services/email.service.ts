@@ -1,9 +1,14 @@
-import { config, transport } from '../config';
+import { config, transport } from '$/config';
+import { isTest } from '$/utils';
+
 import * as tokenService from './token.service';
 
 const sendEmail = async (to: string, subject: string, html: string) => {
   const msg = { from: config.email.from, to, subject, html };
-  await transport.sendMail(msg);
+  await transport.sendMail(msg).catch((err) => {
+    if (isTest()) return;
+    throw err;
+  });
 };
 
 const sendResetPasswordEmail = async (to: string, companyId: string) => {
