@@ -11,7 +11,6 @@ const zodSchema = z.object({
     .transform((v) => parseInt(v, 10))
     .default('4000'),
   DATABASE_URL: z.string().describe('Database url'),
-  TEST_DATABASE_URL: z.string().describe('Test database url'),
   JWT_SECRET: z.string().describe('access token secret key').min(16),
   JWT_MAX_AGE: z
     .string()
@@ -76,10 +75,6 @@ const { data: envVars } = result;
 const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
-  dbUrl:
-    envVars.NODE_ENV !== 'test'
-      ? envVars.DATABASE_URL
-      : envVars.TEST_DATABASE_URL,
   jwt: {
     secret: envVars.JWT_SECRET,
     maxAge: envVars.JWT_MAX_AGE,
