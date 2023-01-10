@@ -2,4 +2,7 @@ node_modules
 
 dist
 
+/**/migrations
+/**/*.db
+
 pnpm-lock.yaml
