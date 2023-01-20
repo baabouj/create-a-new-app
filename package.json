@@ -5,6 +5,9 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": "./dist/bin.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsup --watch --onSuccess \"node dist/bin.js\"",
     "build": "tsup",
