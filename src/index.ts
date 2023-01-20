@@ -1,24 +1,31 @@
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
-import type { Lang, Options, Template } from './types';
+import type { Lang, Options, Type } from './types';
 import { copy, dist, mkdir, readJson, writeJson } from './utils';
 
 const create = async (dir: string, opts: Options) => {
   await mkdir(dir);
 
-  await copyTemplateFiles(opts.template, opts.lang, opts.name, dir);
+  await copyTemplateFiles(
+    opts.type,
+    opts.type === 'server' ? opts.template : '',
+    opts.lang,
+    opts.name,
+    dir
+  );
 
   await copySharedFiles(dir, opts);
 };
 
 const copyTemplateFiles = async (
-  template: Template,
+  type: Type,
+  template: string,
   lang: Lang,
   name: string,
   cwd: string
 ) => {
-  const dir = dist(`templates/${lang}/${template}`);
+  const dir = dist(`templates/${type}/${lang}/${template}`);
   const files = readdirSync(dir, 'utf-8');
 
   for (const file of files) {
