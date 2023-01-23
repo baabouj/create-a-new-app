@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { Prisma } from '@prisma/client';
 
 import { BadRequestException } from '$/exceptions';
 import { emailService, tokenService, userService } from '$/services';
@@ -39,7 +39,7 @@ const signup = async ({ password, ...user }: SignupBody) => {
     emailService.sendVerificationEmail(createdUser.email, createdUser.id);
   } catch (error) {
     if (
-      error instanceof PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
       // we dont want to throw error if it's a unique constraint error (email already exist)
