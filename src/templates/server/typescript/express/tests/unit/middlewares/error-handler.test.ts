@@ -8,10 +8,10 @@ describe('Error Handler middleware', () => {
   test('should send status code and message', () => {
     const error = new HttpException(httpStatus.BAD_REQUEST, 'Any message');
     const res = httpMocks.createResponse();
-    const sendSpy = jest.spyOn(res, 'send');
-    const statusSpy = jest.spyOn(res, 'status');
+    const sendSpy = vi.spyOn(res, 'send');
+    const statusSpy = vi.spyOn(res, 'status');
 
-    errorHandler(error, httpMocks.createRequest(), res, jest.fn());
+    errorHandler(error, httpMocks.createRequest(), res, vi.fn() as any);
 
     expect(statusSpy).toHaveBeenCalledWith(httpStatus.BAD_REQUEST);
     expect(sendSpy).toHaveBeenCalledWith(
@@ -28,10 +28,10 @@ describe('Error Handler middleware', () => {
     };
     const error = new HttpException(httpStatus.BAD_REQUEST, customResponse);
     const res = httpMocks.createResponse();
-    const sendSpy = jest.spyOn(res, 'send');
-    const statusSpy = jest.spyOn(res, 'status');
+    const sendSpy = vi.spyOn(res, 'send');
+    const statusSpy = vi.spyOn(res, 'status');
 
-    errorHandler(error, httpMocks.createRequest(), res, jest.fn());
+    errorHandler(error, httpMocks.createRequest(), res, vi.fn() as any);
 
     expect(statusSpy).toHaveBeenCalledWith(error.getStatus());
     expect(sendSpy).toHaveBeenCalledWith(customResponse);
@@ -40,10 +40,10 @@ describe('Error Handler middleware', () => {
   test('should convert an Error to an Internal Server Error Exception', () => {
     const error = new Error('Any error');
     const res = httpMocks.createResponse();
-    const sendSpy = jest.spyOn(res, 'send');
-    const statusSpy = jest.spyOn(res, 'status');
+    const sendSpy = vi.spyOn(res, 'send');
+    const statusSpy = vi.spyOn(res, 'status');
 
-    errorHandler(error, httpMocks.createRequest(), res, jest.fn());
+    errorHandler(error, httpMocks.createRequest(), res, vi.fn() as any);
     expect(statusSpy).toHaveBeenCalledWith(httpStatus.INTERNAL_SERVER_ERROR);
     expect(sendSpy).toHaveBeenCalledWith(
       expect.objectContaining({

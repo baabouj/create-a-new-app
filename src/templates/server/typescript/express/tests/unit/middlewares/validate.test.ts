@@ -10,7 +10,7 @@ describe('Validation middleware', () => {
     const schema = z.object({
       test: z.string(),
     });
-    const next = jest.fn();
+    const next = vi.fn();
     const req = httpMocks.createRequest({
       body: {
         test: 'body test',
@@ -36,7 +36,7 @@ describe('Validation middleware', () => {
     const schema = z.object({
       test: z.string(),
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     validate({
       body: schema,
@@ -68,7 +68,7 @@ describe('Validation middleware', () => {
         required_error: 'test is required',
       }),
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     validate({
       body: schema,

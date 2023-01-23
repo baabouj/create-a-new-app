@@ -29,7 +29,7 @@ describe('Auth routes', () => {
     });
 
     test('should return 200 and successfully signup user if request data is ok and send verification email', async () => {
-      const sendVerificationEmailSpy = jest.spyOn(
+      const sendVerificationEmailSpy = vi.spyOn(
         emailService,
         'sendVerificationEmail'
       );
@@ -335,7 +335,7 @@ describe('Auth routes', () => {
     test('should return 200 and send reset password email to the user if user exists', async () => {
       const user = generateUser();
       await insertUsers([user]);
-      const sendResetPasswordEmailSpy = jest.spyOn(
+      const sendResetPasswordEmailSpy = vi.spyOn(
         emailService,
         'sendResetPasswordEmail'
       );
@@ -371,7 +371,7 @@ describe('Auth routes', () => {
     test("should return 200 but won't send reset password email to the user if email doesn't exists", async () => {
       const user = generateUser();
 
-      const sendResetPasswordEmailSpy = jest.spyOn(
+      const sendResetPasswordEmailSpy = vi.spyOn(
         emailService,
         'sendResetPasswordEmail'
       );
@@ -514,7 +514,7 @@ describe('Auth routes', () => {
       const user = generateUser();
       await insertUsers([user]);
       const accessToken = tokenService.generateJwt(user.id);
-      const sendVerificationEmailSpy = jest.spyOn(
+      const sendVerificationEmailSpy = vi.spyOn(
         emailService,
         'sendVerificationEmail'
       );
@@ -540,7 +540,7 @@ describe('Auth routes', () => {
       user.emailVerifiedAt = new Date();
       await insertUsers([user]);
       const accessToken = tokenService.generateJwt(user.id);
-      const sendVerificationEmailSpy = jest.spyOn(
+      const sendVerificationEmailSpy = vi.spyOn(
         emailService,
         'sendVerificationEmail'
       );
@@ -579,7 +579,7 @@ describe('Auth middleware', () => {
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${userAccessToken}` },
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
@@ -589,7 +589,7 @@ describe('Auth middleware', () => {
 
   test('should call next with unauthorized error if access token is not found in header', async () => {
     const req = httpMocks.createRequest();
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
@@ -606,7 +606,7 @@ describe('Auth middleware', () => {
     const req = httpMocks.createRequest({
       headers: { Authorization: 'Bearer invalidjwttoken' },
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
@@ -624,7 +624,7 @@ describe('Auth middleware', () => {
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${refreshToken}` },
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
@@ -647,7 +647,7 @@ describe('Auth middleware', () => {
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
@@ -666,7 +666,7 @@ describe('Auth middleware', () => {
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    const next = jest.fn();
+    const next = vi.fn();
 
     await auth(req, httpMocks.createResponse(), next);
 
