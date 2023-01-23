@@ -38,11 +38,6 @@ const login = handleAsync(async (req: Request, res: Response) => {
     maxAge: ms(config.refreshToken.maxAge),
   });
 
-  req.log.info({
-    event: `authn_login_success:${user.id}`,
-    description: `User ${user.id} login successfully`,
-  });
-
   res.send({
     access_token: accessToken,
   });
@@ -90,16 +85,14 @@ const refresh = handleAsync(async (req: Request, res: Response) => {
 const logout = handleAsync(async (req, res) => {
   const token = req.cookies['__Host-token'];
 
-  const edToken = token;
-
-  if (token && edToken) {
+  if (token) {
     res.clearCookie('__Host-token', {
       secure: true,
       httpOnly: true,
       sameSite: 'lax',
     });
 
-    const refreshToken = await tokenService.findRefreshToken(edToken);
+    const refreshToken = await tokenService.findRefreshToken(token);
 
     if (refreshToken) await tokenService.deleteToken(refreshToken.id);
   }
@@ -108,12 +101,7 @@ const logout = handleAsync(async (req, res) => {
 });
 
 const verifyEmail = handleAsync(async (req, res) => {
-  const user = await authService.verifyEmail(req.query.token as string);
-
-  req.log.info({
-    event: `authn_email_verification_success:${user.id}`,
-    description: `User ${user.id} has successfully verified their email`,
-  });
+  await authService.verifyEmail(req.query.token as string);
 
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -125,11 +113,6 @@ const changePassword = handleAsync(async (req, res) => {
     req.body.oldPassword,
     req.body.newPassword
   );
-
-  req.log.info({
-    event: `authn_password_change:${userId}`,
-    description: `User ${userId} has successfully changed their password`,
-  });
 
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -144,15 +127,7 @@ const forgotPassword = handleAsync(async (req, res) => {
 });
 
 const resetPassword = handleAsync(async (req, res) => {
-  const user = await authService.resetPassword(
-    req.query.token as string,
-    req.body.password
-  );
-
-  req.log.info({
-    event: `authn_password_reset_success:${user.id}`,
-    description: `User ${user.id} has successfully reset their password`,
-  });
+  await authService.resetPassword(req.query.token as string, req.body.password);
 
   res.status(httpStatus.NO_CONTENT).send();
 });
