@@ -3,7 +3,6 @@ import type { Server } from 'http';
 import { config, logger, transport } from '$/config';
 import { ServerInitializationException } from '$/exceptions';
 import { prisma } from '$/lib';
-import { isTest } from '$/utils';
 
 import { app } from './app';
 
@@ -37,7 +36,6 @@ prisma
         );
       })
       .catch(() => {
-        if (isTest()) return;
         throw new ServerInitializationException(
           'Failed to connect to email server'
         );

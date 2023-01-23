@@ -20,12 +20,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     )(req, res, next);
   })
     .then(() => next())
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      // console.log({ err });
-
-      return next(err);
-    });
+    .catch((err) => next(err));
 };
 
 export { auth };
