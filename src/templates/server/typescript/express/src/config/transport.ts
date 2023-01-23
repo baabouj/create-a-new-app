@@ -1,12 +1,10 @@
 import nodemailer from 'nodemailer';
 
-import { isTest } from '$/utils';
-
 import { config } from './config';
 
 let transport = nodemailer.createTransport(config.email.smtp);
 
-if (isTest()) {
+if (config.env === 'test') {
   const account = await nodemailer.createTestAccount();
 
   transport = nodemailer.createTransport({

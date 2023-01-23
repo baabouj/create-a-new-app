@@ -17,6 +17,5 @@ const only = <T, Key extends keyof T>(object: T, keys: Key[]): Pick<T, Key> =>
 
 const isProduction = () => config.env === 'production';
 const isDev = () => config.env === 'development';
-const isTest = () => config.env === 'test';
 
-export { exclu, isDev, isProduction, isTest, only };
+export { exclu, isDev, isProduction, only };
