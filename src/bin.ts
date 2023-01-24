@@ -126,6 +126,14 @@ const main = async () => {
         inactive: 'No',
       },
       {
+        type: 'toggle',
+        name: 'commitlint',
+        message: 'Add commitlint for linting commit messages?',
+        initial: false,
+        active: 'Yes',
+        inactive: 'No',
+      },
+      {
         type: 'select',
         name: 'pkgManager',
         message: 'Install dependencies with : ',

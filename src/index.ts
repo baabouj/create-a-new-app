@@ -71,6 +71,11 @@ const copySharedFiles = async (cwd: string, opts: Options) => {
       await copy(lintstagedPrettierConfigPath, cwd);
     }
   }
+
+  if (opts.commitlint) {
+    const commitlintConfigPath = dist(`shared/commitlint`);
+    await copy(commitlintConfigPath, cwd);
+  }
 };
 
 export { create };

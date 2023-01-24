@@ -10,6 +10,7 @@ type Options = {
   prettier: boolean;
   eslint: boolean;
   lintstaged?: boolean;
+  commitlint?: boolean;
 };
 
 export { Lang, Options, Type };
