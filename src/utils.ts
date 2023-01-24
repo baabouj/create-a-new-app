@@ -4,7 +4,6 @@ import fs from 'fs';
 import merge from 'merge';
 import { createSpinner } from 'nanospinner';
 import path from 'path';
-import prettier from 'prettier';
 import { fileURLToPath } from 'url';
 
 const mkdir = async (dir: string) => {
@@ -78,13 +77,8 @@ const readJson = (path: string) => {
 };
 
 const writeJson = (path: string, data: unknown) => {
-  fs.writeFileSync(
-    path,
-    prettier.format(JSON.stringify(data), {
-      parser: 'json-stringify',
-      singleQuote: true,
-    })
-  );
+  const json = JSON.stringify(data, null, '  ') + '\n';
+  fs.writeFileSync(path, json);
 };
 
 const run = async (

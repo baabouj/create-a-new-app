@@ -9,6 +9,7 @@ import path from 'path';
 import prompts from 'prompts';
 
 import { create } from '.';
+import type { Lang, Type } from './types';
 import { dist, readJson, run } from './utils';
 
 const main = async () => {
@@ -46,28 +47,60 @@ const main = async () => {
     }
   }
 
-  const templates = readJson(dist('templates/meta.json'));
+  const { type }: { type: Type } = await prompts({
+    type: 'select',
+    name: 'type',
+    message: 'What the type of your project?',
+    choices: [
+      {
+        title: 'Api Server',
+        value: 'server',
+      },
+      { title: 'Library', value: 'library' },
+    ],
+  });
+
+  const { lang }: { lang: Lang } = await prompts({
+    type: 'select',
+    name: 'lang',
+    message: 'What language do you want to use?',
+    choices: [
+      {
+        title: 'TypeScript',
+        value: 'typescript',
+      },
+      { title: 'JavaScript', value: 'javaScript' },
+    ],
+  });
+
+  let template = '';
+
+  if (type === 'server') {
+    const answer = await prompts({
+      type: 'select',
+      name: 'template',
+      message: 'Which template?',
+      choices: fs
+        .readdirSync(dist(`templates/server/${lang}`))
+        .map((template) => {
+          const metaFile = dist(
+            `templates/server/${lang}/${template}/meta.json`
+          );
+          const { title, description } = readJson(metaFile);
+
+          return {
+            title,
+            description,
+            value: template,
+          };
+        }),
+    });
+
+    template = answer.template;
+  }
 
   const options = await prompts(
     [
-      {
-        type: 'select',
-        name: 'template',
-        message: 'Which template?',
-        choices: templates,
-      },
-      {
-        type: 'select',
-        name: 'lang',
-        message: 'What language do you want to use?',
-        choices: [
-          {
-            title: 'TypeScript',
-            value: 'typescript',
-          },
-          { title: 'JavaScript', value: 'javaScript' },
-        ],
-      },
       {
         type: 'toggle',
         name: 'eslint',
@@ -110,21 +143,23 @@ const main = async () => {
     text: 'Setting up your project',
   });
 
-  await create(dir, { name, ...options });
+  await create(dir, { name, lang, type, template, ...options });
 
   spinner.success({
     text: 'Setup complete',
   });
 
-  await run(
-    () =>
-      fs.copyFileSync(path.join(dir, '.env.example'), path.join(dir, '.env')),
-    {
-      loading: 'Copying environment files',
-      success: 'Environment files copied',
-      error: 'Failed to copy environment files',
-    }
-  );
+  if (fs.existsSync(path.join(dir, '.env.example'))) {
+    await run(
+      () =>
+        fs.copyFileSync(path.join(dir, '.env.example'), path.join(dir, '.env')),
+      {
+        loading: 'Copying environment files',
+        success: 'Environment files copied',
+        error: 'Failed to copy environment files',
+      }
+    );
+  }
 
   process.chdir(dir);
 

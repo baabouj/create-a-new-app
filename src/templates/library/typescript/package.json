@@ -1,0 +1,24 @@
+{
+  "name": "my-library",
+  "license": "MIT",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup src/index.ts --format cjs --no-dts --watch --clean --onSuccess \"node dist/index.js\"",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --minify",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "type:check": "tsc"
+  },
+  "devDependencies": {
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4",
+    "vitest": "^0.27.2"
+  }
+}

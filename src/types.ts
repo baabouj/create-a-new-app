@@ -1,13 +1,14 @@
-type Template = 'express' | 'koa' | 'fastify';
+type Type = 'library' | 'server';
 
 type Lang = 'javascript' | 'typescript';
 
 type Options = {
   name: string;
-  template: Template;
+  type: Type;
+  template: string;
   lang: Lang;
   prettier: boolean;
   eslint: boolean;
 };
 
-export { Lang, Options, Template };
+export { Lang, Options, Type };
