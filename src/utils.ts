@@ -33,7 +33,7 @@ const combine = async (basePath: string, extendPath: string) => {
   const combined = merge.recursive(true, base, extend);
 
   ['dependencies', 'devDependencies'].forEach((key) => {
-    combined[key] = sort(combined[key]);
+    if (combined[key]) combined[key] = sort(combined[key]);
   });
 
   writeJson(basePath, combined);

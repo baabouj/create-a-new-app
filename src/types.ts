@@ -9,6 +9,7 @@ type Options = {
   lang: Lang;
   prettier: boolean;
   eslint: boolean;
+  lintstaged?: boolean;
 };
 
 export { Lang, Options, Type };

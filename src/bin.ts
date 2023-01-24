@@ -110,6 +110,14 @@ const main = async () => {
         inactive: 'No',
       },
       {
+        type: (prev) => (prev ? 'toggle' : null),
+        name: 'lintstaged',
+        message: 'Add lint-staged for running linters on git staged files?',
+        initial: false,
+        active: 'Yes',
+        inactive: 'No',
+      },
+      {
         type: 'toggle',
         name: 'prettier',
         message: 'Add Prettier for code formatting?',
