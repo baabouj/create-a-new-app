@@ -61,6 +61,16 @@ const copySharedFiles = async (cwd: string, opts: Options) => {
       await copy(eslintConfigPath, cwd);
     }
   }
+
+  if (opts.lintstaged) {
+    const lintstagedConfigPath = dist(`shared/lintstaged`);
+    await copy(lintstagedConfigPath, cwd);
+
+    if (opts.prettier) {
+      const lintstagedPrettierConfigPath = dist('shared/lintstaged-prettier');
+      await copy(lintstagedPrettierConfigPath, cwd);
+    }
+  }
 };
 
 export { create };
