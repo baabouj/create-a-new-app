@@ -1,22 +1,16 @@
 {
   "env": {
-    "node": true,
-    "jest": true
+    "node": true
   },
-  "extends": ["plugin:jest/recommended", "plugin:security/recommended"],
-  "plugins": [
-    "jest",
-    "security",
-    "unicorn",
-    "unused-imports",
-    "simple-import-sort"
-  ],
+  "root": true,
+  "extends": ["plugin:security/recommended"],
+  "plugins": ["security", "unicorn", "unused-imports", "simple-import-sort"],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   },
   "rules": {
     "no-console": "error",
-    "jest/expect-expect": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "unused-imports/no-unused-imports": "error",
