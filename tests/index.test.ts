@@ -33,12 +33,12 @@ describe('Api Server', () => {
             prettier: true,
           });
 
-          await execa('npm install', {
+          await execa('pnpm install', {
             cwd,
           });
 
           if (fs.existsSync(path.join(cwd, 'prisma'))) {
-            await execa('npm prisma db push', {
+            await execa('pnpm prisma db push', {
               cwd,
             });
           }
@@ -48,7 +48,7 @@ describe('Api Server', () => {
           const pkg = readJson(path.join(cwd, 'package.json'));
 
           for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-            await execa(`npm ${script}`, {
+            await execa(`pnpm ${script}`, {
               cwd,
             });
           }
@@ -73,7 +73,7 @@ describe('Library', () => {
         prettier: true,
       });
 
-      await execa('npm install', {
+      await execa('pnpm install', {
         cwd,
       });
 
@@ -82,7 +82,7 @@ describe('Library', () => {
       const pkg = readJson(path.join(cwd, 'package.json'));
 
       for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-        await execa(`npm run ${script}`, {
+        await execa(`pnpm ${script}`, {
           cwd,
         });
       }
