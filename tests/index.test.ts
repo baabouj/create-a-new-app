@@ -33,13 +33,7 @@ describe('Api Server', () => {
             prettier: true,
           });
 
-          const dir = await execa('dir', {
-            cwd,
-          });
-
-          console.log(dir, cwd);
-
-          await execa('pnpm install', {
+          await execa('pnpm install --no-frozen-lockfile', {
             cwd,
           });
 
@@ -79,13 +73,7 @@ describe('Library', () => {
         prettier: true,
       });
 
-      const dir = await execa('dir', {
-        cwd,
-      });
-
-      console.log(dir);
-
-      await execa('pnpm install', {
+      await execa('pnpm install --no-frozen-lockfile', {
         cwd,
       });
 
