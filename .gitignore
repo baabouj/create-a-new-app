@@ -4,5 +4,3 @@ dist
 
 /**/migrations
 /**/*.db
-
-pnpm-lock.yaml
