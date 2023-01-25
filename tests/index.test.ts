@@ -33,6 +33,12 @@ describe('Api Server', () => {
             prettier: true,
           });
 
+          const dir = await execa('dir', {
+            cwd,
+          });
+
+          console.log(dir);
+
           await execa('pnpm install', {
             cwd,
           });
@@ -72,6 +78,12 @@ describe('Library', () => {
         eslint: true,
         prettier: true,
       });
+
+      const dir = await execa('dir', {
+        cwd,
+      });
+
+      console.log(dir);
 
       await execa('pnpm install', {
         cwd,
