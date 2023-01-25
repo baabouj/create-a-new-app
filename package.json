@@ -11,6 +11,8 @@
   "scripts": {
     "dev": "tsup --watch --onSuccess \"node dist/bin.js\"",
     "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "prettier --write --plugin-search-dir=. \"**/*.{js,ts,json}\"",
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.{js,ts,json}\"",
     "lint": "eslint **/*.{js,ts}",
@@ -45,10 +47,12 @@
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.3",
     "tsup": "^6.5.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vitest": "^0.28.1"
   },
   "dependencies": {
     "chalk": "^5.2.0",
+    "execa": "^6.1.0",
     "figlet": "^1.5.2",
     "gradient-string": "^2.0.2",
     "merge": "^2.1.1",
