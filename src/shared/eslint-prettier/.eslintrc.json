@@ -1,15 +1,10 @@
 {
   "env": {
-    "node": true,
-    "jest": true
+    "node": true
   },
-  "extends": [
-    "plugin:jest/recommended",
-    "plugin:security/recommended",
-    "plugin:prettier/recommended"
-  ],
+  "root": true,
+  "extends": ["plugin:security/recommended", "plugin:prettier/recommended"],
   "plugins": [
-    "jest",
     "security",
     "prettier",
     "unicorn",
@@ -17,11 +12,11 @@
     "simple-import-sort"
   ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   },
   "rules": {
     "no-console": "error",
-    "jest/expect-expect": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "unused-imports/no-unused-imports": "error",
