@@ -37,7 +37,7 @@ describe('Api Server', () => {
             cwd,
           });
 
-          console.log(dir);
+          console.log(dir, cwd);
 
           await execa('pnpm install', {
             cwd,
