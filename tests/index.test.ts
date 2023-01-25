@@ -31,13 +31,6 @@ describe('Api Server', () => {
             type: 'server',
             eslint: true,
             prettier: true,
-            lintstaged: true,
-            commitlint: true,
-          });
-
-          // for `husky install` to work
-          await execa('git init', {
-            cwd,
           });
 
           await execa('pnpm install', {
@@ -78,10 +71,6 @@ describe('Library', () => {
         type: 'library',
         eslint: true,
         prettier: true,
-      });
-
-      await execa('git init', {
-        cwd,
       });
 
       await execa('pnpm install', {
