@@ -1,0 +1,57 @@
+name-template: 'v$RESOLVED_VERSION 🌈'
+tag-template: 'v$RESOLVED_VERSION'
+template: |
+  # What's Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'type: feature'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'type: bug'
+  - title: '🧰 Maintenance'
+    label:
+      - 'chore'
+      - 'type: maintenance'
+  - title: '⬆️ Dependencies'
+    collapse-after: 5
+    labels:
+      - 'dependencies'
+      - 'type: dependencies'
+  - title: '📝 Documentation'
+    label: 'type: docs'
+  - title: '✨ Other Changes'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'type: breaking'
+  minor:
+    labels:
+      - 'minor'
+      - 'type: feature'
+  patch:
+    labels:
+      - 'patch'
+      - 'type: bug'
+      - 'type: maintenance'
+      - 'type: docs'
+      - 'type: dependencies'
+      - 'type: security'
+
+exclude-labels:
+  - 'skip-changelog'
