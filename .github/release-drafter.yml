@@ -53,5 +53,25 @@ version-resolver:
       - 'type: dependencies'
       - 'type: security'
 
+autolabeler:
+  - label: 'type: maintenance'
+    branch:
+      - '/chore\/.+/'
+    title:
+      - '/chore/i'
+  - label: 'type: bug'
+    branch:
+      - '/fix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'type: feature'
+    branch:
+      - '/feature\/.+/'
+    title:
+      - '/feat/i'
+  - label: 'type: docs'
+    branch:
+      - '/docs\/.+/'
+
 exclude-labels:
   - 'skip-changelog'
