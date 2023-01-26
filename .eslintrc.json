@@ -1,17 +1,15 @@
 {
   "env": {
-    "node": true,
-    "jest": true
+    "node": true
   },
+  "root": true,
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "plugin:jest/recommended",
     "plugin:security/recommended",
     "plugin:prettier/recommended"
   ],
   "plugins": [
     "@typescript-eslint",
-    "jest",
     "security",
     "prettier",
     "unicorn",
@@ -19,10 +17,10 @@
     "simple-import-sort"
   ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   },
   "rules": {
-    "jest/expect-expect": "off",
     "security/detect-non-literal-fs-filename": "off",
     "security/detect-object-injection": "off",
     "simple-import-sort/imports": "error",
