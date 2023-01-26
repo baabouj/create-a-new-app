@@ -1,16 +1,20 @@
-import { execa } from 'execa';
+import { execaCommandSync } from 'execa';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { afterAll, beforeAll, describe, test } from 'vitest';
 
 import { create } from '../src';
 import type { Lang } from '../src/types';
-import { mkdir, readJson } from '../src/utils';
+import { readJson } from '../src/utils';
 
-const testDir = path.join(__dirname, '.tests-temp');
+const testDir = fileURLToPath(
+  new URL('../../.test-tmp/create-nodejs-app/', import.meta.url)
+);
 
-beforeAll(async () => {
-  await mkdir(testDir);
+beforeAll(() => {
+  fs.rmSync(testDir, { recursive: true, force: true });
+  fs.mkdirSync(testDir, { recursive: true });
 });
 afterAll(() => {
   fs.rmSync(testDir, { recursive: true, force: true });
@@ -33,12 +37,13 @@ describe('Api Server', () => {
             prettier: true,
           });
 
-          await execa('pnpm install --no-frozen-lockfile', {
+          execaCommandSync('pnpm install --no-frozen-lockfile', {
             cwd,
+            stdio: 'ignore',
           });
 
           if (fs.existsSync(path.join(cwd, 'prisma'))) {
-            await execa('pnpm prisma db push', {
+            execaCommandSync('pnpm prisma db push', {
               cwd,
             });
           }
@@ -48,7 +53,7 @@ describe('Api Server', () => {
           const pkg = readJson(path.join(cwd, 'package.json'));
 
           for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-            await execa(`pnpm ${script}`, {
+            execaCommandSync(`pnpm ${script}`, {
               cwd,
             });
           }
@@ -73,7 +78,7 @@ describe('Library', () => {
         prettier: true,
       });
 
-      await execa('pnpm install --no-frozen-lockfile', {
+      execaCommandSync('pnpm install --no-frozen-lockfile', {
         cwd,
       });
 
@@ -82,7 +87,7 @@ describe('Library', () => {
       const pkg = readJson(path.join(cwd, 'package.json'));
 
       for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-        await execa(`pnpm ${script}`, {
+        execaCommandSync(`pnpm ${script}`, {
           cwd,
         });
       }
