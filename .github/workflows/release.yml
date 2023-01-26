@@ -13,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup PNPM
-      - uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v2
         with:
           version: 7
 
@@ -31,7 +31,7 @@ jobs:
         run: pnpm test
 
       - name: Publish to NPM
-      - uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
 
