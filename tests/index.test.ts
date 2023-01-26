@@ -1,4 +1,4 @@
-import { execa } from 'execa';
+import { execaCommandSync } from 'execa';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -37,7 +37,7 @@ describe('Api Server', () => {
             prettier: true,
           });
 
-          await execa('pnpm install --no-frozen-lockfile', {
+          execaCommandSync('pnpm install --no-frozen-lockfile', {
             cwd,
             stdio: 'ignore',
           });
@@ -50,7 +50,7 @@ describe('Api Server', () => {
           }
 
           if (fs.existsSync(path.join(cwd, 'prisma'))) {
-            await execa('pnpm prisma db push', {
+            execaCommandSync('pnpm prisma db push', {
               cwd,
             });
           }
@@ -60,7 +60,7 @@ describe('Api Server', () => {
           const pkg = readJson(path.join(cwd, 'package.json'));
 
           for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-            await execa(`pnpm ${script}`, {
+            execaCommandSync(`pnpm ${script}`, {
               cwd,
             });
           }
@@ -85,7 +85,7 @@ describe('Library', () => {
         prettier: true,
       });
 
-      await execa('pnpm install --no-frozen-lockfile', {
+      execaCommandSync('pnpm install --no-frozen-lockfile', {
         cwd,
       });
 
@@ -94,7 +94,7 @@ describe('Library', () => {
       const pkg = readJson(path.join(cwd, 'package.json'));
 
       for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-        await execa(`pnpm ${script}`, {
+        execaCommandSync(`pnpm ${script}`, {
           cwd,
         });
       }
