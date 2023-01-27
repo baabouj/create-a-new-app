@@ -22,9 +22,9 @@ export default defineConfig(async (options) => {
         path.join(process.cwd(), 'dist/shared')
       );
     },
-    ...(!options.watch && {
+    ...(options.watch && {
       env: {
-        NODE_ENV: 'production',
+        NODE_ENV: 'development',
       },
     }),
   };
