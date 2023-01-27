@@ -17,10 +17,10 @@
     "format:check": "prettier --check --plugin-search-dir=. \"**/*.{js,ts,json}\"",
     "lint": "eslint **/*.{js,ts}",
     "lint:fix": "eslint **/*.{js,ts} --fix",
-    "check": "npm run format:check && npm run lint",
-    "fix": "npm run format && npm run lint:fix",
+    "check": "pnpm format:check && pnpm lint",
+    "fix": "pnpm format && pnpm lint:fix",
     "prepare": "husky install",
-    "postversion": "npm run test && git push && git push --tags"
+    "postversion": "pnpm test && git push && git push --tags"
   },
   "keywords": [],
   "author": "Omar Baabouj <baabouj.dev@gmail.com>",
