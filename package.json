@@ -18,7 +18,9 @@
     "lint": "eslint **/*.{js,ts}",
     "lint:fix": "eslint **/*.{js,ts} --fix",
     "check": "npm run format:check && npm run lint",
-    "fix": "npm run format && npm run lint:fix"
+    "fix": "npm run format && npm run lint:fix",
+    "prepare": "husky install",
+    "postversion": "npm run test && git push && git push --tags"
   },
   "keywords": [],
   "author": "Omar Baabouj <baabouj.dev@gmail.com>",
