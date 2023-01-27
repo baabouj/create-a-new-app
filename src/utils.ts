@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { exec } from 'child_process';
+import { execaCommand } from 'execa';
 import fs from 'fs';
 import merge from 'merge';
 import { createSpinner } from 'nanospinner';
@@ -62,11 +62,11 @@ const copy = async (from: string, to: string) => {
 };
 
 const dist = (p: string) => {
-  if (process.env.NODE_ENV === 'production') {
-    return fileURLToPath(new URL(`./${p}`, import.meta.url).href);
+  if (process.env.NODE_ENV === 'development') {
+    return path.join(process.cwd(), 'src', p);
   }
 
-  return path.join(process.cwd(), 'src', p);
+  return fileURLToPath(new URL(`./${p}`, import.meta.url).href);
 };
 
 const readJson = (path: string) => {
@@ -88,7 +88,7 @@ const run = async (
   const spinner = createSpinner(loading).start({ text: loading });
   try {
     if (typeof task === 'string') {
-      exec(task);
+      await execaCommand(task);
     } else {
       task();
     }
@@ -97,7 +97,7 @@ const run = async (
     spinner.error({ text: error });
     console.log(
       typeof task === 'string' ? chalk.red(`Failed to execute ${task}`) : '',
-      error
+      err
     );
     process.exit(1);
   }

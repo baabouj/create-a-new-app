@@ -179,6 +179,12 @@ const main = async () => {
 
   process.chdir(dir);
 
+  await run('git init', {
+    loading: 'Initializing Git',
+    success: 'Git initialized',
+    error: 'Failed to initialize Git',
+  });
+
   await run(`${options.pkgManager} install`, {
     loading: 'Installing dependencies',
     success: 'Dependencies installed',
