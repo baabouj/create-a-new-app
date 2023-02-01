@@ -1,6 +1,4 @@
 # create-a-new-app
-The easiest way to start your new nodejs application
-# create-svelte
 
 A CLI for creating your new nodejs application. Just run...
 
@@ -15,7 +13,7 @@ npx create-a-new-app
 You can also use `create-a-new-app` programmatically:
 
 ```js
-import { create } from 'create-svelte';
+import { create } from 'create-a-new-app';
 
 await create('my-new-app', {
   name: 'my-new-app',
