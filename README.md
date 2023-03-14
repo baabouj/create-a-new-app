@@ -23,6 +23,7 @@ await create('my-new-app', {
   prettier: false,
   eslint: false,
   lintstaged: false,
-  commitlint: false
+  commitlint: false,
+  ghActions: false, // currently only availabe if type is 'library'
 });
 ```

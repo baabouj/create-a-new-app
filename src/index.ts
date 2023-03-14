@@ -76,6 +76,11 @@ const copySharedFiles = async (cwd: string, opts: Options) => {
     const commitlintConfigPath = dist(`shared/commitlint`);
     await copy(commitlintConfigPath, cwd);
   }
+
+  if (opts.type === 'library' && opts.ghActions) {
+    const ghActionsPath = dist(`shared/gh-actions`);
+    await copy(ghActionsPath, `${cwd}/.github`);
+  }
 };
 
 export { create };
