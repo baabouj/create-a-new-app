@@ -134,6 +134,14 @@ const main = async () => {
         inactive: 'No',
       },
       {
+        type: type === 'library' ? 'toggle' : null,
+        name: 'ghActions',
+        message: 'Add Github Action for CI/CD?',
+        initial: false,
+        active: 'Yes',
+        inactive: 'No',
+      },
+      {
         type: 'select',
         name: 'pkgManager',
         message: 'Install dependencies with : ',

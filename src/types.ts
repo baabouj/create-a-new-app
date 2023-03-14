@@ -11,6 +11,7 @@ type Options = {
   eslint: boolean;
   lintstaged?: boolean;
   commitlint?: boolean;
+  ghActions?: boolean;
 };
 
 export { Lang, Options, Type };
