@@ -6,7 +6,8 @@
   "main": "./dist/index.js",
   "bin": "./dist/bin.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "dev": "tsup --watch --onSuccess \"node dist/bin.js\"",
@@ -25,6 +26,10 @@
   "keywords": [],
   "author": "Omar Baabouj <baabouj.dev@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baabouj/create-a-new-app"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.4.0",
     "@commitlint/config-conventional": "^17.4.0",
