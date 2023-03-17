@@ -156,7 +156,7 @@ async function main() {
 
   spinner.start('Installing dependencies');
 
-  // await execaCommand(`${pkgManager} install`);
+  await execaCommand(`${pkgManager} install`);
 
   spinner.stop('Dependencies installed');
 
