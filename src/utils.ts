@@ -1,10 +1,8 @@
-import chalk from 'chalk';
-import { execaCommand } from 'execa';
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import merge from 'merge';
-import { createSpinner } from 'nanospinner';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const mkdir = async (dir: string) => {
   try {
@@ -81,26 +79,4 @@ const writeJson = (path: string, data: unknown) => {
   fs.writeFileSync(path, json);
 };
 
-const run = async (
-  task: string | (() => void),
-  { loading = 'loading ....', success = 'success', error = 'error' }
-) => {
-  const spinner = createSpinner(loading).start({ text: loading });
-  try {
-    if (typeof task === 'string') {
-      await execaCommand(task);
-    } else {
-      task();
-    }
-    spinner.success({ text: success });
-  } catch (err) {
-    spinner.error({ text: error });
-    console.log(
-      typeof task === 'string' ? chalk.red(`Failed to execute ${task}`) : '',
-      err
-    );
-    process.exit(1);
-  }
-};
-
-export { copy, dist, mkdir, readJson, run, writeJson };
+export { copy, dist, mkdir, readJson, writeJson };

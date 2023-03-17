@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
-import { join } from 'path';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 import type { Lang, Options, Type } from './types';
 import { copy, dist, mkdir, readJson, writeJson } from './utils';
