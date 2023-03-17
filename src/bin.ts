@@ -1,218 +1,174 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs';
+import path from 'node:path';
+
+import * as p from '@clack/prompts';
 import chalk from 'chalk';
-import figlet from 'figlet';
-import fs from 'fs';
+import { execaCommand } from 'execa';
 import gradient from 'gradient-string';
-import { createSpinner } from 'nanospinner';
-import path from 'path';
-import prompts from 'prompts';
 
 import { create } from '.';
-import type { Lang, Type } from './types';
-import { dist, readJson, run } from './utils';
+import type { Options } from './types';
+import { dist, readJson } from './utils';
 
-const main = async () => {
-  console.log(gradient.pastel.multiline(figlet.textSync(`Welcome !`)) + '\n');
+async function main() {
+  console.log();
+  p.intro(chalk.cyanBright.inverse(' create-a-new-app '));
 
-  let dir = process.argv[2] ?? '.';
-
-  if (dir === '.') {
-    const opts = await prompts([
-      {
-        type: 'text',
-        name: 'dir',
-        message:
-          'Where should we create your project?\n  (leave blank to use current directory)',
-      },
-    ]);
-
-    if (opts.dir) {
-      dir = opts.dir;
-    }
-  }
-
-  if (fs.existsSync(dir)) {
-    if (fs.readdirSync(dir).length > 0) {
-      const response = await prompts({
-        type: 'confirm',
-        name: 'value',
-        message: 'Directory is not empty. Continue?',
-        initial: false,
-      });
-
-      if (!response.value) {
-        process.exit(1);
-      }
-    }
-  }
-
-  const { type }: { type: Type } = await prompts({
-    type: 'select',
-    name: 'type',
-    message: 'What the type of your project?',
-    choices: [
-      {
-        title: 'Api Server',
-        value: 'server',
-      },
-      { title: 'Library', value: 'library' },
-    ],
+  const dir = await p.text({
+    message:
+      'Where should we create your project?  (leave blank to use current directory)',
+    defaultValue: '.',
+    placeholder: './my-app',
   });
 
-  const { lang }: { lang: Lang } = await prompts({
-    type: 'select',
-    name: 'lang',
-    message: 'What language do you want to use?',
-    choices: [
-      {
-        title: 'TypeScript',
-        value: 'typescript',
-      },
-      { title: 'JavaScript', value: 'javaScript' },
-    ],
-  });
+  if (p.isCancel(dir)) {
+    p.cancel('Operation cancelled');
+    return process.exit(0);
+  }
 
-  let template = '';
-
-  if (type === 'server') {
-    const answer = await prompts({
-      type: 'select',
-      name: 'template',
-      message: 'Which template?',
-      choices: fs
-        .readdirSync(dist(`templates/server/${lang}`))
-        .map((template) => {
-          const metaFile = dist(
-            `templates/server/${lang}/${template}/meta.json`
-          );
-          const { title, description } = readJson(metaFile);
-
-          return {
-            title,
-            description,
-            value: template,
-          };
-        }),
+  if (fs.existsSync(dir) && fs.readdirSync(dir).length > 0) {
+    const shouldContinue = await p.confirm({
+      message: 'Directory is not empty. Continue?',
+      initialValue: false,
     });
 
-    template = answer.template;
+    if (!shouldContinue || p.isCancel(shouldContinue)) {
+      p.cancel('Operation cancelled');
+      return process.exit(0);
+    }
   }
 
-  const options = await prompts(
-    [
-      {
-        type: 'toggle',
-        name: 'eslint',
-        message: 'Add ESLint for code linting?',
-        initial: false,
-        active: 'Yes',
-        inactive: 'No',
+  const { pkgManager, ...options } = (await p.group(
+    {
+      type: () =>
+        p.select({
+          message: "What's the type of your project?",
+          options: [
+            { value: 'server', label: 'Api Server' },
+            { value: 'library', label: 'Library' },
+          ],
+        }),
+      lang: () =>
+        p.select({
+          message: 'What language do you want to use?',
+          options: [
+            { value: 'typescript', label: 'TypeScript', hint: 'recommended' },
+            { value: 'javascript', label: 'JavaScript', hint: 'oh no' },
+          ],
+        }),
+      template: ({ results: { lang, type } }) => {
+        if (type === 'server') {
+          return p.select({
+            message: "What's the template do you want to use?",
+            options: fs
+              .readdirSync(dist(`templates/server/${lang}`))
+              .map((t) => {
+                const metaFile = dist(
+                  `templates/server/${lang}/${t}/meta.json`
+                );
+                const { title, description } = readJson(metaFile);
+
+                return {
+                  label: title,
+                  hint: description,
+                  value: t,
+                };
+              }),
+          });
+        }
       },
-      {
-        type: (prev) => (prev ? 'toggle' : null),
-        name: 'lintstaged',
-        message: 'Add lint-staged for running linters on git staged files?',
-        initial: false,
-        active: 'Yes',
-        inactive: 'No',
+      eslint: () =>
+        p.confirm({
+          message: 'Add ESLint for code linting?',
+          initialValue: true,
+        }),
+      lintstaged: ({ results: { eslint } }) => {
+        if (eslint)
+          return p.confirm({
+            message: 'Add lint-staged for running linters on git staged files?',
+            initialValue: true,
+          });
       },
-      {
-        type: 'toggle',
-        name: 'prettier',
-        message: 'Add Prettier for code formatting?',
-        initial: false,
-        active: 'Yes',
-        inactive: 'No',
+      prettier: () =>
+        p.confirm({
+          message: 'Add Prettier for code formatting?',
+          initialValue: true,
+        }),
+      commitlint: () =>
+        p.confirm({
+          message: 'Add commitlint for linting commit messages?',
+          initialValue: true,
+        }),
+      ghActions: ({ results: { type } }) => {
+        if (type === 'library')
+          return p.confirm({
+            message: 'Add Github Action for CI/CD?',
+            initialValue: true,
+          });
       },
-      {
-        type: 'toggle',
-        name: 'commitlint',
-        message: 'Add commitlint for linting commit messages?',
-        initial: false,
-        active: 'Yes',
-        inactive: 'No',
-      },
-      {
-        type: type === 'library' ? 'toggle' : null,
-        name: 'ghActions',
-        message: 'Add Github Action for CI/CD?',
-        initial: false,
-        active: 'Yes',
-        inactive: 'No',
-      },
-      {
-        type: 'select',
-        name: 'pkgManager',
-        message: 'Install dependencies with : ',
-        choices: [
-          {
-            title: 'npm',
-            value: 'npm',
-          },
-          { title: 'yarn', value: 'yarn' },
-          { title: 'pnpm', value: 'pnpm' },
-        ],
-      },
-    ],
+      pkgManager: () =>
+        p.select({
+          message: 'Install dependencies with : ',
+          options: [
+            { value: 'npm', label: 'npm' },
+            { value: 'yarn', label: 'yarn' },
+            { value: 'pnpm', label: 'pnpm' },
+          ],
+        }),
+    },
     {
       onCancel: () => {
-        process.exit(1);
+        p.cancel('Operation cancelled.');
+        process.exit(0);
       },
     }
-  );
+  )) as Omit<Required<Options>, 'name'> & {
+    pkgManager: string;
+  };
+
+  const spinner = p.spinner();
+
   const name = path.basename(path.resolve(dir));
 
-  const spinner = createSpinner().start({
-    text: 'Setting up your project',
-  });
+  spinner.start('Creating your project');
 
-  await create(dir, { name, lang, type, template, ...options });
+  await create(dir, { name, ...options });
 
-  spinner.success({
-    text: 'Setup complete',
-  });
+  spinner.stop('Project created');
 
   if (fs.existsSync(path.join(dir, '.env.example'))) {
-    await run(
-      () =>
-        fs.copyFileSync(path.join(dir, '.env.example'), path.join(dir, '.env')),
-      {
-        loading: 'Copying environment files',
-        success: 'Environment files copied',
-        error: 'Failed to copy environment files',
-      }
-    );
+    spinner.start('Copying environment files');
+
+    fs.copyFileSync(path.join(dir, '.env.example'), path.join(dir, '.env'));
+
+    spinner.stop('Environment files copied');
   }
 
   process.chdir(dir);
 
-  await run('git init', {
-    loading: 'Initializing Git',
-    success: 'Git initialized',
-    error: 'Failed to initialize Git',
-  });
+  spinner.start('Initializing Git');
 
-  await run(`${options.pkgManager} install`, {
-    loading: 'Installing dependencies',
-    success: 'Dependencies installed',
-    error: 'Failed to install dependencies',
-  });
+  await execaCommand('git init');
 
-  spinner.success({
-    text: 'Installation complete! Your project is ready to go!',
-  });
-  console.log(
-    '\n',
-    chalk('  Run your project: \n'),
-    chalk(`  cd ${dir} \n`),
-    chalk(
-      `  ${
-        options.pkgManager === 'npm' ? 'npx run' : options.pkgManager
-      } dev \n\n`
-    ),
-    gradient.pastel.multiline(figlet.textSync('Happy Coding !')) + '\n'
-  );
-};
+  spinner.stop('Git initialized');
 
-main();
+  spinner.start('Installing dependencies');
+
+  // await execaCommand(`${pkgManager} install`);
+
+  spinner.stop('Dependencies installed');
+
+  p.outro("You're all set!");
+
+  p.intro('Run your project:');
+
+  p.log.info(`cd ${dir}`);
+
+  p.log.info(`${pkgManager === 'npm' ? 'npx run' : pkgManager} dev`);
+
+  p.outro(gradient.pastel.multiline('Happy Coding !'));
+}
+
+main().catch(console.error);

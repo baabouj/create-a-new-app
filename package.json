@@ -21,7 +21,7 @@
     "check": "pnpm format:check && pnpm lint",
     "fix": "pnpm format && pnpm lint:fix",
     "prepare": "husky install",
-    "postversion": "pnpm test && git push && git push --tags"
+    "postversion": "git push && git push --tags"
   },
   "keywords": [],
   "author": "Omar Baabouj <baabouj.dev@gmail.com>",
@@ -33,11 +33,9 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.0",
     "@commitlint/config-conventional": "^17.4.0",
-    "@types/figlet": "^1.5.5",
     "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",
-    "@types/prompts": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "eslint": "^8.23.0",
@@ -58,12 +56,10 @@
     "vitest": "^0.28.1"
   },
   "dependencies": {
+    "@clack/prompts": "^0.6.3",
     "chalk": "^5.2.0",
     "execa": "^6.1.0",
-    "figlet": "^1.5.2",
     "gradient-string": "^2.0.2",
-    "merge": "^2.1.1",
-    "nanospinner": "^1.1.0",
-    "prompts": "^2.4.2"
+    "merge": "^2.1.1"
   }
 }
