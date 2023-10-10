@@ -30,28 +30,28 @@ authRouter.post(
   '/change-password',
   auth,
   validate(changePasswordSchema),
-  authController.changePassword
+  authController.changePassword,
 );
 authRouter.post(
   '/forgot-password',
   validate(forgotPasswordSchema),
-  authController.forgotPassword
+  authController.forgotPassword,
 );
 authRouter.post(
   '/reset-password',
   validate(resetPasswordSchema),
-  authController.resetPassword
+  authController.resetPassword,
 );
 
 authRouter.post(
   '/verify-email',
   validate(verifyEmailSchema),
-  authController.verifyEmail
+  authController.verifyEmail,
 );
 authRouter.post(
   '/send-verification-email',
   auth,
-  authController.sendVerificationEmail
+  authController.sendVerificationEmail,
 );
 
 export { authRouter };

@@ -78,7 +78,7 @@ const verifyEmail = async (token: string) => {
 const changePassword = async (
   id: string,
   oldPassword: string,
-  newPassword: string
+  newPassword: string,
 ) => {
   const user = await userService.find(id);
   if (!user) {

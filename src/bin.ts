@@ -39,7 +39,6 @@ async function main() {
       return process.exit(0);
     }
   }
-
   const { pkgManager, ...options } = (await p.group(
     {
       type: () =>
@@ -66,7 +65,7 @@ async function main() {
               .readdirSync(dist(`templates/server/${lang}`))
               .map((t) => {
                 const metaFile = dist(
-                  `templates/server/${lang}/${t}/meta.json`
+                  `templates/server/${lang}/${t}/meta.json`,
                 );
                 const { title, description } = readJson(metaFile);
 
@@ -123,7 +122,7 @@ async function main() {
         p.cancel('Operation cancelled.');
         process.exit(0);
       },
-    }
+    },
   )) as Omit<Required<Options>, 'name'> & {
     pkgManager: string;
   };
@@ -156,7 +155,7 @@ async function main() {
 
   spinner.start('Installing dependencies');
 
-  await execaCommand(`${pkgManager} install`);
+  // await execaCommand(`${pkgManager} install`);
 
   spinner.stop('Dependencies installed');
 

@@ -30,7 +30,7 @@ const saveToken = async (
   userId: string,
   token: string,
   type: TokenType,
-  expires: number
+  expires: number,
 ) => {
   const expiresAt = new Date(expires);
   const createdToken = await prisma.token.create({
@@ -72,7 +72,7 @@ const generateRefreshToken = async (userId: string) => {
     userId,
     token,
     TOKEN_TYPES.REFRESH,
-    Date.now() + ms(config.refreshToken.maxAge)
+    Date.now() + ms(config.refreshToken.maxAge),
   );
   return token;
 };
@@ -83,7 +83,7 @@ const generateEmailVerificationToken = async (userId: string) => {
     userId,
     token,
     TOKEN_TYPES.EMAIL_VERIFICATION,
-    Date.now() + ms(config.emailVerificationToken.maxAge)
+    Date.now() + ms(config.emailVerificationToken.maxAge),
   );
   return token;
 };
@@ -94,7 +94,7 @@ const generateResetPasswordToken = async (userId: string) => {
     userId,
     token,
     TOKEN_TYPES.RESET_PASSWORD,
-    Date.now() + ms(config.resetPasswordToken.maxAge)
+    Date.now() + ms(config.resetPasswordToken.maxAge),
   );
   return token;
 };
@@ -127,7 +127,7 @@ const deleteUserRefreshTokens = (userId: string) => {
 const findEmailVerificationToken = async (token: string) => {
   const emailVerificationToken = await findToken(
     token,
-    TOKEN_TYPES.EMAIL_VERIFICATION
+    TOKEN_TYPES.EMAIL_VERIFICATION,
   );
   return emailVerificationToken;
 };

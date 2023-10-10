@@ -32,12 +32,12 @@ prisma
         logger.info('Connected to email server');
 
         server = app.listen(config.port, () =>
-          logger.info(`Server listening on port ${config.port}`)
+          logger.info(`Server listening on port ${config.port}`),
         );
       })
       .catch(() => {
         throw new ServerInitializationException(
-          'Failed to connect to email server'
+          'Failed to connect to email server',
         );
       });
   })

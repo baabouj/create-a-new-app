@@ -9,7 +9,7 @@ const key = Buffer.from(
     .update(config.encryption.key)
     .digest('base64url')
     .substring(0, 32),
-  'base64url'
+  'base64url',
 );
 
 const iv = Buffer.alloc(16, 0); // Initialization crypto vector

@@ -16,7 +16,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(
       'jwt',
       { session: false },
-      verifyCallback(req, resolve, reject)
+      verifyCallback(req, resolve, reject),
     )(req, res, next);
   })
     .then(() => next())

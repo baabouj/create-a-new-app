@@ -18,7 +18,7 @@ describe('Error Handler middleware', () => {
       expect.objectContaining({
         statusCode: httpStatus.BAD_REQUEST,
         message: 'Any message',
-      })
+      }),
     );
   });
 
@@ -49,7 +49,7 @@ describe('Error Handler middleware', () => {
       expect.objectContaining({
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         message: httpStatus[httpStatus.INTERNAL_SERVER_ERROR],
-      })
+      }),
     );
   });
 });
