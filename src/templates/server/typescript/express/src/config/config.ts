@@ -16,31 +16,31 @@ const zodSchema = z.object({
     .string()
     .default('5min')
     .describe(
-      'time when access token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"'
+      'time when access token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"',
     ),
   REFRESH_TOKEN_MAX_AGE: z
     .string()
     .default('1d')
     .describe(
-      'time when refresh token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"'
+      'time when refresh token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"',
     ),
   EMAIL_VERIFICATION_TOKEN_MAX_AGE: z
     .string()
     .default('5m')
     .describe(
-      'time when email verification token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"'
+      'time when email verification token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"',
     ),
   EMAIL_VERIFICATION_FRONTEND_URL: z
     .string()
     .url()
     .describe(
-      'the url to the email verification page on the the front-end app'
+      'the url to the email verification page on the the front-end app',
     ),
   RESET_PASSWORD_TOKEN_MAX_AGE: z
     .string()
     .default('5m')
     .describe(
-      'time when reset password token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"'
+      'time when reset password token will be expired : a string describing a time span vercel/ms (https://github.com/vercel/ms). Eg: 60, "10m", "10h", "7d"',
     ),
   RESET_PASSWORD_FRONTEND_URL: z
     .string()
@@ -65,8 +65,8 @@ if (!result.success) {
   const missingEnvVars = result.error.errors.map((err) => err.path.toString());
   throw new Error(
     `Some environment variables are missing or invalid : ${missingEnvVars.join(
-      ', '
-    )}`
+      ', ',
+    )}`,
   );
 }
 

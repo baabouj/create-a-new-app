@@ -7,7 +7,7 @@ import { ValidationException } from '$/exceptions';
 
 const parse = <T>(
   data: T,
-  schema: Schema
+  schema: Schema,
 ):
   | { success: true; data: T }
   | {
@@ -32,7 +32,7 @@ const parse = <T>(
 const validate =
   (
     schema: { body?: Schema; params?: Schema; query?: Schema },
-    whitelist = true
+    whitelist = true,
   ) =>
   (req: Request, res: Response, next: NextFunction) => {
     let errors: ValidationError[] = [];

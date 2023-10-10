@@ -31,7 +31,7 @@ describe('Auth routes', () => {
     test('should return 200 and successfully signup user if request data is ok and send verification email', async () => {
       const sendVerificationEmailSpy = vi.spyOn(
         emailService,
-        'sendVerificationEmail'
+        'sendVerificationEmail',
       );
 
       await pactum
@@ -48,7 +48,7 @@ describe('Auth routes', () => {
 
       expect(sendVerificationEmailSpy).toHaveBeenCalledWith(
         user?.email,
-        user?.id
+        user?.id,
       );
     });
 
@@ -122,7 +122,7 @@ describe('Auth routes', () => {
         .expectBodyContains('access_token')
         .expect((ctx) => {
           const cookies = cookie.parse(
-            ctx.res.headers['set-cookie']?.[0] as string
+            ctx.res.headers['set-cookie']?.[0] as string,
           );
           expect(cookies).toHaveProperty('__Host-token');
         })
@@ -337,7 +337,7 @@ describe('Auth routes', () => {
       await insertUsers([user]);
       const sendResetPasswordEmailSpy = vi.spyOn(
         emailService,
-        'sendResetPasswordEmail'
+        'sendResetPasswordEmail',
       );
 
       await pactum
@@ -352,7 +352,7 @@ describe('Auth routes', () => {
 
       expect(sendResetPasswordEmailSpy).toHaveBeenCalledWith(
         user.email,
-        user.id
+        user.id,
       );
     });
 
@@ -373,7 +373,7 @@ describe('Auth routes', () => {
 
       const sendResetPasswordEmailSpy = vi.spyOn(
         emailService,
-        'sendResetPasswordEmail'
+        'sendResetPasswordEmail',
       );
 
       await pactum
@@ -395,7 +395,7 @@ describe('Auth routes', () => {
       const [user] = await insertUsers([generateUser()]);
 
       const resetPasswordToken = await tokenService.generateResetPasswordToken(
-        user.id
+        user.id,
       );
 
       const password = 'newpassword';
@@ -410,7 +410,7 @@ describe('Auth routes', () => {
 
       const isMatched = await hash.verify(
         updateduser?.password as string,
-        password
+        password,
       );
 
       expect(isMatched).toBe(true);
@@ -516,7 +516,7 @@ describe('Auth routes', () => {
       const accessToken = tokenService.generateJwt(user.id);
       const sendVerificationEmailSpy = vi.spyOn(
         emailService,
-        'sendVerificationEmail'
+        'sendVerificationEmail',
       );
 
       await pactum
@@ -531,7 +531,7 @@ describe('Auth routes', () => {
 
       expect(sendVerificationEmailSpy).toHaveBeenCalledWith(
         user.email,
-        user.id
+        user.id,
       );
     });
 
@@ -542,7 +542,7 @@ describe('Auth routes', () => {
       const accessToken = tokenService.generateJwt(user.id);
       const sendVerificationEmailSpy = vi.spyOn(
         emailService,
-        'sendVerificationEmail'
+        'sendVerificationEmail',
       );
 
       await pactum
@@ -557,7 +557,7 @@ describe('Auth routes', () => {
 
       expect(sendVerificationEmailSpy).not.toHaveBeenCalledWith(
         user.email,
-        user.id
+        user.id,
       );
     });
 
@@ -598,7 +598,7 @@ describe('Auth middleware', () => {
       expect.objectContaining({
         status: httpStatus.UNAUTHORIZED,
         response: 'Unauthorized',
-      })
+      }),
     );
   });
 
@@ -615,7 +615,7 @@ describe('Auth middleware', () => {
       expect.objectContaining({
         status: httpStatus.UNAUTHORIZED,
         response: 'Unauthorized',
-      })
+      }),
     );
   });
 
@@ -633,7 +633,7 @@ describe('Auth middleware', () => {
       expect.objectContaining({
         status: httpStatus.UNAUTHORIZED,
         response: 'Unauthorized',
-      })
+      }),
     );
   });
 
@@ -656,7 +656,7 @@ describe('Auth middleware', () => {
       expect.objectContaining({
         status: httpStatus.UNAUTHORIZED,
         response: 'Unauthorized',
-      })
+      }),
     );
   });
 
@@ -675,7 +675,7 @@ describe('Auth middleware', () => {
       expect.objectContaining({
         status: httpStatus.UNAUTHORIZED,
         response: 'Unauthorized',
-      })
+      }),
     );
   });
 });

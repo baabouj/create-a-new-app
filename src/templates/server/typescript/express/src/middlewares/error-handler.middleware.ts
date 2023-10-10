@@ -6,7 +6,7 @@ import { isDev, isProduction } from '$/utils';
 
 const errorConverter = (
   err: Error | HttpException,
-  req: Request
+  req: Request,
 ): HttpException => {
   if (!(err instanceof HttpException)) {
     if (isDev()) {
@@ -20,7 +20,7 @@ const errorConverter = (
         cause: err,
         event: 'sys_error',
         description: 'Internal server error',
-      }
+      },
     );
   }
 
@@ -31,7 +31,7 @@ const errorHandler = (
   err: Error | HttpException,
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   const exception = errorConverter(err, req);
 

@@ -15,11 +15,11 @@ export default defineConfig(async (options) => {
     onSuccess: async () => {
       await copy(
         path.join(process.cwd(), 'src/templates'),
-        path.join(process.cwd(), 'dist/templates')
+        path.join(process.cwd(), 'dist/templates'),
       );
       await copy(
         path.join(process.cwd(), 'src/shared'),
-        path.join(process.cwd(), 'dist/shared')
+        path.join(process.cwd(), 'dist/shared'),
       );
     },
     ...(options.watch && {

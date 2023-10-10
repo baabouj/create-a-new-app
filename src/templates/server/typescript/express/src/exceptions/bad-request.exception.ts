@@ -6,7 +6,7 @@ import { HttpException } from './http.exception';
 export class BadRequestException extends HttpException {
   constructor(
     response: string | Record<string, any> = 'Bad Request',
-    options?: HttpExceptionOptions
+    options?: HttpExceptionOptions,
   ) {
     super(httpStatus.BAD_REQUEST, response, options);
   }
