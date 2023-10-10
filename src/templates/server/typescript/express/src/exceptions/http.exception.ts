@@ -8,7 +8,7 @@ export class HttpException extends Error {
   constructor(
     private readonly status: number,
     private readonly response: string | Record<string, any>,
-    private readonly options?: HttpExceptionOptions // used for logs
+    private readonly options?: HttpExceptionOptions, // used for logs
   ) {
     super();
   }

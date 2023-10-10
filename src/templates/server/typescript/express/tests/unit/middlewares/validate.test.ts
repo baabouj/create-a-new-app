@@ -58,7 +58,7 @@ describe('Validation middleware', () => {
             },
           ]),
         }),
-      })
+      }),
     );
   });
 
@@ -90,7 +90,7 @@ describe('Validation middleware', () => {
             },
           ]),
         }),
-      })
+      }),
     );
   });
 });

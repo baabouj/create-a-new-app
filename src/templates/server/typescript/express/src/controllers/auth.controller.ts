@@ -28,7 +28,7 @@ const login = handleAsync(async (req: Request, res: Response) => {
   }
 
   const { accessToken, refreshToken } = await tokenService.generateAuthTokens(
-    user.id
+    user.id,
   );
 
   res.cookie('__Host-token', refreshToken, {
@@ -66,7 +66,7 @@ const refresh = handleAsync(async (req: Request, res: Response) => {
   if (!token) throw new BadRequestException();
 
   const { accessToken, refreshToken } = await tokenService.generateAuthTokens(
-    token.userId
+    token.userId,
   );
   await tokenService.deleteToken(token.id);
 
@@ -111,7 +111,7 @@ const changePassword = handleAsync(async (req, res) => {
   await authService.changePassword(
     userId,
     req.body.oldPassword,
-    req.body.newPassword
+    req.body.newPassword,
   );
 
   res.status(httpStatus.NO_CONTENT).send();

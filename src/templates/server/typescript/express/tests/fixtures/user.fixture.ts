@@ -31,7 +31,7 @@ const insertUsers = async (users: User[]) => {
           password: hashedPassword,
         },
       });
-    })
+    }),
   );
   return createdUsers;
 };

@@ -12,7 +12,7 @@ const create = async (dir: string, opts: Options) => {
     opts.type === 'server' ? opts.template : '',
     opts.lang,
     opts.name,
-    dir
+    dir,
   );
 
   await copySharedFiles(dir, opts);
@@ -23,7 +23,7 @@ const copyTemplateFiles = async (
   template: string,
   lang: Lang,
   name: string,
-  cwd: string
+  cwd: string,
 ) => {
   const dir = dist(`templates/${type}/${lang}/${template}`);
   const files = readdirSync(dir, 'utf-8');
@@ -58,7 +58,7 @@ const copySharedFiles = async (cwd: string, opts: Options) => {
       const eslintConfigPath = dist(
         `shared/eslint${opts.prettier ? '-prettier' : ''}${
           opts.lang === 'typescript' ? '-typescript' : ''
-        }`
+        }`,
       );
       await copy(eslintConfigPath, cwd);
     }

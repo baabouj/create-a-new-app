@@ -47,7 +47,7 @@ const findAll = async ({ page, limit }: any) => {
 
 const update = async (
   id: string,
-  data: Pick<Prisma.UserUpdateInput, 'emailVerifiedAt' | 'name' | 'password'>
+  data: Pick<Prisma.UserUpdateInput, 'emailVerifiedAt' | 'name' | 'password'>,
 ) => {
   const updatedUser = await prisma.user.update({
     where: {
@@ -59,7 +59,7 @@ const update = async (
 };
 
 const create = async (
-  data: Pick<Prisma.UserCreateInput, 'name' | 'email' | 'password'>
+  data: Pick<Prisma.UserCreateInput, 'name' | 'email' | 'password'>,
 ) => {
   const createdUser = await prisma.user.create({
     data,

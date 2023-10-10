@@ -38,7 +38,7 @@ app.use((_req, _res, next) => {
     new HttpException(httpStatus.NOT_FOUND, 'Not Found', {
       event: 'resource_not_found',
       description: "Attempt to access a resource that doesn't exist",
-    })
+    }),
   );
 });
 

@@ -1,4 +1,4 @@
-import { execaCommandSync } from 'execa';
+import { execaCommand } from 'execa';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,7 +9,7 @@ import type { Lang } from '../src/types';
 import { readJson } from '../src/utils';
 
 const testDir = fileURLToPath(
-  new URL('../../.test-tmp/create-nodejs-app/', import.meta.url)
+  new URL('../../.test-tmp/create-nodejs-app/', import.meta.url),
 );
 
 beforeAll(() => {
@@ -37,7 +37,7 @@ describe('Api Server', () => {
             prettier: true,
           });
 
-          execaCommandSync('pnpm install --no-frozen-lockfile', {
+          await execaCommand('pnpm install --no-frozen-lockfile', {
             cwd,
             stdio: 'ignore',
           });
@@ -45,12 +45,12 @@ describe('Api Server', () => {
           if (fs.existsSync(path.join(cwd, '.env.example'))) {
             fs.copyFileSync(
               path.join(cwd, '.env.example'),
-              path.join(cwd, '.env')
+              path.join(cwd, '.env'),
             );
           }
 
           if (fs.existsSync(path.join(cwd, 'prisma'))) {
-            execaCommandSync('pnpm prisma db push', {
+            await execaCommand('pnpm prisma db push', {
               cwd,
             });
           }
@@ -60,7 +60,7 @@ describe('Api Server', () => {
           const pkg = readJson(path.join(cwd, 'package.json'));
 
           for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-            execaCommandSync(`pnpm ${script}`, {
+            await execaCommand(`pnpm ${script}`, {
               cwd,
             });
           }
@@ -85,7 +85,7 @@ describe('Library', () => {
         prettier: true,
       });
 
-      execaCommandSync('pnpm install --no-frozen-lockfile', {
+      await execaCommand('pnpm install --no-frozen-lockfile', {
         cwd,
       });
 
@@ -94,7 +94,7 @@ describe('Library', () => {
       const pkg = readJson(path.join(cwd, 'package.json'));
 
       for (const script of scriptsToTest.filter((s) => !!pkg.scripts[s])) {
-        execaCommandSync(`pnpm ${script}`, {
+        await execaCommand(`pnpm ${script}`, {
           cwd,
         });
       }
