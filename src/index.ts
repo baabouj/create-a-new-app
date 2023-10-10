@@ -29,6 +29,8 @@ const copyTemplateFiles = async (
   const files = readdirSync(dir, 'utf-8');
 
   for (const file of files) {
+    if (file === 'meta.json') continue;
+
     const dest = join(cwd, file);
     await copy(join(dir, file), dest);
   }
