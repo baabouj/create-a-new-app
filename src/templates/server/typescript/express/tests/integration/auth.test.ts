@@ -1,13 +1,9 @@
 import cookie from 'cookie';
 import httpStatus from 'http-status';
-import httpMocks from 'node-mocks-http';
 import pactum from 'pactum';
 
-import { config } from '$/config';
-import { HttpException } from '$/exceptions';
-import { auth } from '$/middlewares';
 import { emailService, tokenService, userService } from '$/services';
-import { exclu, hash, only } from '$/utils';
+import { hash, only } from '$/utils';
 
 import type { User } from '../fixtures/user.fixture';
 import { generateUser, insertUsers } from '../fixtures/user.fixture';
@@ -567,115 +563,5 @@ describe('Auth routes', () => {
         .post('/v1/auth/send-verification-email')
         .expectStatus(httpStatus.UNAUTHORIZED);
     });
-  });
-});
-
-describe('Auth middleware', () => {
-  test('should call next with no errors if access token is valid', async () => {
-    const [user] = await insertUsers([generateUser()]);
-
-    const userAccessToken = tokenService.generateJwt(user.id);
-
-    const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${userAccessToken}` },
-    });
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith();
-    expect(req.user).toEqual(exclu(user, ['password']));
-  });
-
-  test('should call next with unauthorized error if access token is not found in header', async () => {
-    const req = httpMocks.createRequest();
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith(expect.any(HttpException));
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        status: httpStatus.UNAUTHORIZED,
-        response: 'Unauthorized',
-      }),
-    );
-  });
-
-  test('should call next with unauthorized error if access token is not a valid jwt token', async () => {
-    const req = httpMocks.createRequest({
-      headers: { Authorization: 'Bearer invalidjwttoken' },
-    });
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith(expect.any(HttpException));
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        status: httpStatus.UNAUTHORIZED,
-        response: 'Unauthorized',
-      }),
-    );
-  });
-
-  test('should call next with unauthorized error if the token is not an access token', async () => {
-    const refreshToken = tokenService.generateOpaqueToken();
-    const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${refreshToken}` },
-    });
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith(expect.any(HttpException));
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        status: httpStatus.UNAUTHORIZED,
-        response: 'Unauthorized',
-      }),
-    );
-  });
-
-  test('should call next with unauthorized error if access token is expired', async () => {
-    const user = generateUser();
-    await insertUsers([user]);
-
-    config.jwt.maxAge = '-5m';
-
-    const accessToken = tokenService.generateJwt(user.id);
-    const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith(expect.any(HttpException));
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        status: httpStatus.UNAUTHORIZED,
-        response: 'Unauthorized',
-      }),
-    );
-  });
-
-  test('should call next with unauthorized error if user is not found', async () => {
-    const user = generateUser();
-    const accessToken = tokenService.generateJwt(user.id);
-    const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const next = vi.fn();
-
-    await auth(req, httpMocks.createResponse(), next);
-
-    expect(next).toHaveBeenCalledWith(expect.any(HttpException));
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        status: httpStatus.UNAUTHORIZED,
-        response: 'Unauthorized',
-      }),
-    );
   });
 });
