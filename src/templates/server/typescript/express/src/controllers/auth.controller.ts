@@ -1,5 +1,4 @@
 import type { User } from '@prisma/client';
-import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import ms from 'ms';
 
@@ -7,51 +6,71 @@ import { config } from '$/config';
 import { BadRequestException } from '$/exceptions';
 import { handleAsync } from '$/lib';
 import { authService, tokenService } from '$/services';
+import {
+  changePasswordSchema,
+  forgotPasswordSchema,
+  loginSchema,
+  resetPasswordSchema,
+  signupSchema,
+  verifyEmailSchema,
+} from '$/validations';
 
-const login = handleAsync(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+const login = handleAsync(
+  async (req, res) => {
+    const { email, password } = req.body;
 
-  const user = await authService.login(email, password);
+    const user = await authService.login(email, password);
 
-  const cookieToken: string = req.cookies['__Host-token'];
+    const cookieToken: string = req.cookies['__Host-token'];
 
-  if (cookieToken) {
-    const foundRefreshToken = await tokenService.findRefreshToken(cookieToken);
+    if (cookieToken) {
+      const foundRefreshToken =
+        await tokenService.findRefreshToken(cookieToken);
 
-    if (foundRefreshToken) await tokenService.deleteToken(foundRefreshToken.id);
+      if (foundRefreshToken)
+        await tokenService.deleteToken(foundRefreshToken.id);
 
-    res.clearCookie('__Host-token', {
+      res.clearCookie('__Host-token', {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+    }
+
+    const { accessToken, refreshToken } = await tokenService.generateAuthTokens(
+      user.id,
+    );
+
+    res.cookie('__Host-token', refreshToken, {
       secure: true,
       httpOnly: true,
       sameSite: 'lax',
+      maxAge: ms(config.refreshToken.maxAge),
     });
-  }
 
-  const { accessToken, refreshToken } = await tokenService.generateAuthTokens(
-    user.id,
-  );
+    res.send({
+      access_token: accessToken,
+    });
+  },
+  {
+    schema: loginSchema,
+  },
+);
 
-  res.cookie('__Host-token', refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: ms(config.refreshToken.maxAge),
-  });
+const signup = handleAsync(
+  async (req, res) => {
+    await authService.signup(req.body);
+    res.send({
+      message:
+        'A link to activate your account has been emailed to the address provided.',
+    });
+  },
+  {
+    schema: signupSchema,
+  },
+);
 
-  res.send({
-    access_token: accessToken,
-  });
-});
-
-const signup = handleAsync(async (req: Request, res: Response) => {
-  await authService.signup(req.body);
-  res.send({
-    message:
-      'A link to activate your account has been emailed to the address provided.',
-  });
-});
-
-const refresh = handleAsync(async (req: Request, res: Response) => {
+const refresh = handleAsync(async (req, res) => {
   const cookieToken = req.cookies['__Host-token'];
 
   if (!cookieToken) throw new BadRequestException();
@@ -82,68 +101,104 @@ const refresh = handleAsync(async (req: Request, res: Response) => {
   });
 });
 
-const logout = handleAsync(async (req, res) => {
-  const token = req.cookies['__Host-token'];
+const logout = handleAsync(
+  async (req, res) => {
+    const token = req.cookies['__Host-token'];
 
-  if (token) {
-    res.clearCookie('__Host-token', {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax',
+    if (token) {
+      res.clearCookie('__Host-token', {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+
+      const refreshToken = await tokenService.findRefreshToken(token);
+
+      if (refreshToken) await tokenService.deleteToken(refreshToken.id);
+    }
+
+    res.status(httpStatus.NO_CONTENT).send();
+  },
+  {
+    auth: true,
+  },
+);
+
+const verifyEmail = handleAsync(
+  async (req, res) => {
+    await authService.verifyEmail(req.query.token);
+
+    res.status(httpStatus.NO_CONTENT).send();
+  },
+  {
+    schema: verifyEmailSchema,
+  },
+);
+
+const changePassword = handleAsync(
+  async (req, res) => {
+    const userId = (req.user as User).id;
+    await authService.changePassword(
+      userId,
+      req.body.oldPassword,
+      req.body.newPassword,
+    );
+
+    res.status(httpStatus.NO_CONTENT).send();
+  },
+  {
+    auth: true,
+    schema: changePasswordSchema,
+  },
+);
+
+const forgotPassword = handleAsync(
+  async (req, res) => {
+    await authService.sendResetPasswordEmail(req.body.email);
+
+    res.send({
+      message:
+        'If that email address is in our database, an email is sent to reset your password',
     });
+  },
+  {
+    schema: forgotPasswordSchema,
+  },
+);
 
-    const refreshToken = await tokenService.findRefreshToken(token);
+const resetPassword = handleAsync(
+  async (req, res) => {
+    await authService.resetPassword(req.query.token, req.body.password);
 
-    if (refreshToken) await tokenService.deleteToken(refreshToken.id);
-  }
+    res.status(httpStatus.NO_CONTENT).send();
+  },
+  {
+    schema: resetPasswordSchema,
+  },
+);
 
-  res.status(httpStatus.NO_CONTENT).send();
-});
+const sendVerificationEmail = handleAsync(
+  async (req, res) => {
+    await authService.sendVerificationEmail((req.user as User).id);
 
-const verifyEmail = handleAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token as string);
+    res.send({
+      message:
+        'If your email address is not already verified, an email is sent to verify your email address',
+    });
+  },
+  {
+    auth: true,
+  },
+);
 
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
-const changePassword = handleAsync(async (req, res) => {
-  const userId = (req.user as User).id;
-  await authService.changePassword(
-    userId,
-    req.body.oldPassword,
-    req.body.newPassword,
-  );
-
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
-const forgotPassword = handleAsync(async (req, res) => {
-  await authService.sendResetPasswordEmail(req.body.email);
-
-  res.send({
-    message:
-      'If that email address is in our database, an email is sent to reset your password',
-  });
-});
-
-const resetPassword = handleAsync(async (req, res) => {
-  await authService.resetPassword(req.query.token as string, req.body.password);
-
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
-const sendVerificationEmail = handleAsync(async (req, res) => {
-  await authService.sendVerificationEmail((req.user as User).id);
-
-  res.send({
-    message:
-      'If your email address is not already verified, an email is sent to verify your email address',
-  });
-});
-
-const findAuthedUser = handleAsync(async (req: Request, res: Response) => {
-  res.send(req.user);
-});
+const findAuthedUser = handleAsync(
+  async (req, res) => {
+    res.send(req.user);
+  },
+  {
+    auth: true,
+  },
+);
 
 export {
   changePassword,
